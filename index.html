@@ -14,32 +14,46 @@
             --mayo: #f1c40f;
             --aonori: #27ae60;
         }
-        * { touch-action: manipulation; -webkit-user-select: none; }
+
+        /* 画面全体の基本設定 */
+        * { touch-action: manipulation; -webkit-user-select: none; box-sizing: border-box; }
+        
         body { 
             text-align: center; 
             background-color: var(--bg-color);
             background-image: repeating-linear-gradient(45deg, #d35400 0, #d35400 1px, transparent 0, transparent 50%);
             background-size: 10px 10px;
-            font-family: 'Hiragino Kaku Gothic ProN', sans-serif; 
-            margin: 0; padding: 0; 
+            font-family: 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', sans-serif;
+            margin: 0; padding: 0;
+            width: 100vw; height: 100vh;
+            overflow: hidden; /* はみ出し防止 */
         }
         
-        #ui { padding: 15px; color: #fff; text-shadow: 2px 2px 4px #000; background: rgba(0,0,0,0.3); }
-        .stats { font-size: 26px; font-weight: bold; }
-        #combo-container { font-size: 36px; color: #ffeb3b; height: 45px; margin-top: 5px; font-style: italic; font-weight: bold; text-shadow: 0 0 10px #fff, 2px 2px 0 #000; }
+        /* UI部分 */
+        #ui { 
+            position: relative; z-index: 10;
+            padding: 15px; color: #fff; text-shadow: 2px 2px 4px #000; 
+            background: rgba(0,0,0,0.3); height: 120px;
+        }
+        .stats { font-size: 24px; font-weight: bold; }
+        #combo-container { font-size: 32px; color: #ffeb3b; height: 40px; margin-top: 5px; font-style: italic; font-weight: bold; text-shadow: 0 0 10px #fff, 2px 2px 0 #000; }
 
+        /* 鉄板部分 */
         .grid { 
             display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; 
             background: var(--iron-color); 
-            padding: 20px; border-radius: 20px; 
-            width: 90vw; max-width: 480px; margin: 20px auto; 
-            box-shadow: inset 0 0 20px #000, 0 10px 0 #1a252f;
+            padding: 15px; border-radius: 20px; 
+            width: 95vw; max-width: 480px; margin: 10px auto; 
+            box-shadow: inset 0 0 20px #000, 0 8px 0 #1a252f;
+            position: relative; z-index: 5;
         }
+
         .hole { 
             aspect-ratio: 1/1; background: #1a1a1a; border-radius: 50%; cursor: pointer; position: relative; 
             box-shadow: inset 0 5px 10px #000; overflow: hidden;
         }
 
+        /* たこ焼きの見た目 */
         .tako { 
             width: 100%; height: 100%; border-radius: 50%; position: absolute; inset: 0;
             display: flex; align-items: center; justify-content: center; pointer-events: none;
@@ -49,9 +63,7 @@
         .step1 { background: radial-gradient(circle at 30% 30%, #fffde7 0%, #ffeaa7 100%); transform: scale(0.6) translateY(10px); opacity: 0.8; }
         .step2 { background: radial-gradient(circle at 30% 30%, #ffeaa7 0%, #f39c12 100%); transform: scale(0.85) translateY(5px); }
         
-        /* 通常たこ焼き */
         .done { 
-            transform: scale(1.0) translateY(0); 
             background: 
                 radial-gradient(circle at 70% 70%, var(--aonori) 2px, transparent 3px),
                 linear-gradient(135deg, transparent 40%, var(--mayo) 42%, var(--mayo) 47%, transparent 49%),
@@ -60,37 +72,167 @@
             box-shadow: inset 0 -5px 10px rgba(0,0,0,0.5);
         }
         
-        /* 黄金ソースたこ焼き */
         .gold { 
             background: 
-                radial-gradient(circle at 20% 20%, #fff 0%, transparent 10%), /* 黄金の輝き */
-                radial-gradient(circle at 80% 30%, #fff 0%, transparent 10%),
-                radial-gradient(circle at 50% 40%, var(--source-gold) 0%, #d4ac0d 60%, transparent 70%), /* 黄金ソース */
-                radial-gradient(circle at 30% 30%, #f1c40f 0%, #9a7d0a 100%); /* ベース */
-            box-shadow: 0 0 20px rgba(255,255,255,0.6), inset 0 -5px 10px rgba(0,0,0,0.3) !important;
+                radial-gradient(circle at 20% 20%, #fff 0%, transparent 10%),
+                radial-gradient(circle at 50% 40%, var(--source-gold) 0%, #d4ac0d 60%, transparent 70%),
+                radial-gradient(circle at 30% 30%, #f1c40f 0%, #9a7d0a 100%);
+            box-shadow: 0 0 15px rgba(255,255,255,0.6), inset 0 -5px 10px rgba(0,0,0,0.3) !important;
         }
 
-        /* 毒ソースたこ焼き */
         .poison { 
             background: 
-                radial-gradient(circle at 70% 20%, #2ecc71 2px, transparent 3px), /* 怪しい緑の粒 */
-                radial-gradient(circle at 30% 60%, #2ecc71 1.5px, transparent 2px),
-                radial-gradient(circle at 50% 40%, var(--source-poison) 0%, #4a235a 65%, transparent 75%), /* 毒ソース */
-                radial-gradient(circle at 30% 30%, #8e44ad 0%, #2c3e50 100%); /* ベース */
+                radial-gradient(circle at 70% 20%, #2ecc71 2px, transparent 3px),
+                radial-gradient(circle at 50% 40%, var(--source-poison) 0%, #4a235a 65%, transparent 75%),
+                radial-gradient(circle at 30% 30%, #8e44ad 0%, #2c3e50 100%);
             box-shadow: inset 0 -5px 15px rgba(0,0,0,0.7) !important;
         }
 
         .burnt { background: radial-gradient(circle at 30% 30%, #444 0%, #000 100%) !important; }
 
-        .tako::after {
-            font-size: 16px; font-weight: 900; color: #fff;
-            text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 0 2px 5px rgba(0,0,0,0.5);
-        }
+        .tako::after { font-size: 14px; font-weight: 900; color: #fff; text-shadow: 1px 1px 2px #000; }
         .done::after { content: "完成!"; }
-        .gold::after { content: "黄金!"; color: #fff; }
+        .gold::after { content: "黄金!"; }
         .poison::after { content: "毒!!"; color: #adff2f; }
-        .burnt::after { content: "炭"; font-size: 20px; color: #555; text-shadow: none; }
+        .burnt::after { content: "炭"; color: #555; }
 
-        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 100; flex-direction: column; color: white; backdrop-filter: blur(5px); }
-        #start-btn, .share-btn { padding: 18px 40px; font-size: 22px; font-weight: bold; color: #fff; background: #c0392b; border: none; border-radius: 50px; cursor: pointer; margin: 15px; box-shadow: 0 5px 0 #922b21; }
-        .share-btn { background: #000; border: 2px solid #fff;
+        /* オーバーレイ（開始画面）★ここを強化 */
+        #overlay { 
+            position: fixed; inset: 0; 
+            background: rgba(0,0,0,0.85); 
+            display: flex; align-items: center; justify-content: center; 
+            z-index: 9999; /* 何があっても一番上 */
+            flex-direction: column; color: white; 
+            backdrop-filter: blur(5px);
+        }
+        #start-btn, .share-btn { 
+            padding: 18px 40px; font-size: 22px; font-weight: bold; color: #fff; 
+            background: #c0392b; border: none; border-radius: 50px; 
+            cursor: pointer; margin: 15px; box-shadow: 0 5px 0 #922b21;
+            z-index: 10000;
+        }
+        .share-btn { background: #000; border: 2px solid #fff; display: none; }
+        #countdown-text { font-size: 100px; display: none; font-weight: 900; text-shadow: 0 0 20px #e67e22; }
+        #result-text { font-size: 24px; margin-bottom: 20px; text-align: center; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+
+    <div id="ui">
+        <div class="stats">⏱ <span id="time">60</span>s | 得点: <span id="score">0</span></div>
+        <div id="combo-container"><span id="combo">0</span> COMBO!!</div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <div id="overlay">
+        <div id="result-text"></div>
+        <button id="start-btn" onclick="preStart()">ゲーム開始！</button>
+        <button id="share-btn" class="share-btn" onclick="shareX()">Xに投稿する</button>
+        <div id="countdown-text"></div>
+    </div>
+
+    <script>
+        let score = 0, timeLeft = 60, combo = 0, isPlaying = false;
+        const maxSimultaneousLimit = 10;
+
+        // 穴の初期生成
+        const grid = document.getElementById('grid');
+        for (let i = 0; i < 20; i++) {
+            const hole = document.createElement('div');
+            hole.className = 'hole';
+            hole.addEventListener('click', (e) => { e.preventDefault(); clickTako(hole); });
+            grid.appendChild(hole);
+        }
+
+        function preStart() {
+            document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('share-btn').style.display = 'none';
+            document.getElementById('result-text').innerText = '';
+            const countEl = document.getElementById('countdown-text');
+            countEl.innerText = "3";
+            countEl.style.display = 'block';
+            let count = 3;
+            const timer = setInterval(() => {
+                if (count > 1) { count--; countEl.innerText = count; }
+                else if (count === 1) { count--; countEl.innerText = "GO!"; }
+                else { 
+                    clearInterval(timer); 
+                    countEl.style.display = 'none'; 
+                    document.getElementById('overlay').style.display = 'none'; 
+                    startGame(); 
+                }
+            }, 800);
+        }
+
+        function startGame() {
+            isPlaying = true; score = 0; timeLeft = 60; combo = 0; updateUI();
+            const gameLoop = setInterval(() => {
+                if (!isPlaying) { clearInterval(gameLoop); return; }
+                timeLeft--; updateUI();
+                if (timeLeft <= 0) endGame(); else tick();
+            }, 1000);
+        }
+
+        function tick() {
+            const currentCount = document.querySelectorAll('.tako-active').length;
+            if (currentCount >= maxSimultaneousLimit) return;
+            const targetCount = Math.floor(Math.random() * 9) + 2;
+            if (currentCount < targetCount) spawnTako(targetCount - currentCount);
+        }
+
+        function spawnTako(num) {
+            const emptyHoles = Array.from(document.querySelectorAll('.hole:not(.tako-active)'));
+            const actualSpawn = Math.min(num, emptyHoles.length);
+            for (let i = 0; i < actualSpawn; i++) {
+                const target = emptyHoles.splice(Math.floor(Math.random() * emptyHoles.length), 1)[0];
+                target.classList.add('tako-active');
+                let type = Math.random() < 0.08 ? 'gold' : (Math.random() < 0.15 ? 'poison' : 'normal');
+                const takoImg = document.createElement('div');
+                takoImg.className = 'tako step1';
+                target.appendChild(takoImg);
+                setTimeout(() => { if(takoImg.parentNode) takoImg.className = `tako step2 ${type==='gold'?'gold':''} ${type==='poison'?'poison':''}`; }, 1000);
+                setTimeout(() => { if(takoImg.parentNode) { takoImg.classList.replace('step2', 'done'); takoImg.dataset.status = 'ready'; takoImg.dataset.type = type; } }, 2000);
+                setTimeout(() => {
+                    if (takoImg.parentNode && takoImg.dataset.status === 'ready') {
+                        takoImg.classList.replace('done', 'burnt'); takoImg.dataset.status = 'burnt';
+                        if (type !== 'poison') { combo = 0; updateUI(); }
+                        setTimeout(() => { if(takoImg.parentNode) { target.innerHTML = ''; target.classList.remove('tako-active'); } }, 1000);
+                    }
+                }, 7000);
+            }
+        }
+
+        function clickTako(hole) {
+            const tako = hole.querySelector('.tako');
+            if (!tako || tako.dataset.status !== 'ready') return;
+            const type = tako.dataset.type;
+            if (type === 'poison') { score -= 50; combo = 0; }
+            else { combo++; score += (type === 'gold' ? 100 : 10) + Math.floor(combo / 5) * 5; }
+            updateUI(); hole.innerHTML = ''; hole.classList.remove('tako-active');
+        }
+
+        function updateUI() {
+            document.getElementById('time').innerText = timeLeft;
+            document.getElementById('score').innerText = score;
+            document.getElementById('combo').innerText = combo;
+        }
+
+        function endGame() {
+            isPlaying = false;
+            let rank = score > 2000 ? "🐙たこ焼き神🐙" : (score > 1200 ? "名店主" : "見習い");
+            document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}`;
+            document.getElementById('overlay').style.display = 'flex';
+            document.getElementById('start-btn').style.display = 'block';
+            document.getElementById('start-btn').innerText = 'もう一度焼く';
+            document.getElementById('share-btn').style.display = 'block';
+            document.querySelectorAll('.hole').forEach(h => { h.innerHTML = ''; h.classList.remove('tako-active'); });
+        }
+
+        function shareX() {
+            const text = encodeURIComponent(`🐙たこさし（令和最新版）で${score}点獲得！\nランク：${document.getElementById('result-text').innerText.split('ランク: ')[1]}\n#たこさし令和最新版`);
+            window.open(`https://twitter.com/intent/tweet?text=${text}`);
+        }
+    </script>
+</body>
+</html>
