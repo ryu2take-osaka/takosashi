@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>たこさし 極・職人魂</title>
+    <title>たこさし ～令和最新版～</title>
     <style>
         :root {
             --bg-color: #e67e22;
@@ -255,9 +255,9 @@
     </div>
     <div class="grid" id="grid"></div>
     <div id="overlay">
-        <div id="result-text">たこさし 極・職人魂</div>
+        <div id="result-text">たこさし ～令和最新版～</div>
         <div id="name-input-container">
-            <input type="text" id="player-name" placeholder="名前を入力してや！" maxlength="10">
+            <input type="text" id="player-name" value="ゲスト" placeholder="名前を入力してや！" maxlength="10">
         </div>
         <button id="start-btn" onclick="preStart()">ゲーム開始！</button>
         <button id="share-btn" class="share-btn" onclick="shareX()">Xに投稿する</button>
@@ -414,7 +414,7 @@
             document.getElementById('overlay').style.display = 'flex';
 
             // スコア送信
-            const playerName = document.getElementById('player-name').value || "名無し職人";
+            const playerName = document.getElementById('player-name').value || "ゲスト";
             try {
                 if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
                     await addDoc(collection(db, "high_scores"), {
