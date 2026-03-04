@@ -430,6 +430,9 @@
             // ランキング取得と表示
             await showLeaderboard();
 
+            // 5秒待機（演出効果）
+            await new Promise(resolve => setTimeout(resolve, 5000));
+
             document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}`;
             document.getElementById('start-btn').style.display = 'block';
             document.getElementById('start-btn').innerText = 'もう一度焼く';
