@@ -180,18 +180,26 @@
 
         function endGame() {
             isPlaying = false;
-            let rank = score > 10000 ? "🐙たこ焼き神🐙" : (score > 5000 ? "伝説の店主" : "一人前");
+            let rank = "";
+            
+            // 新しいランク分け
+            if (score > 35000) rank = "🐙たこ焼きの化身（もはやタコそのものや）";
+            else if (score > 25000) rank = "宇宙一の職人（人間卒業おめでとう）";
+            else if (score > 15000) rank = "令和のたこ焼き王（歴史に名を刻んだで）";
+            else if (score > 8000) rank = "行列の絶えない名店（プロの技やな）";
+            else if (score > 3000) rank = "近所の人気店（やるやんけ）";
+            else rank = "門前払い（もっと修行してや）";
+        
             document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}\n\n(集計中...5秒お待ちください)`;
             document.getElementById('overlay').style.display = 'flex';
             
-            // 5秒間のディレイ設定
             setTimeout(() => {
                 document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}`;
                 document.getElementById('start-btn').style.display = 'block';
                 document.getElementById('start-btn').innerText = 'もう一度焼く';
                 document.getElementById('share-btn').style.display = 'block';
             }, 5000);
-
+        
             document.querySelectorAll('.hole').forEach(h => { h.innerHTML = ''; h.classList.remove('tako-active'); });
         }
 
