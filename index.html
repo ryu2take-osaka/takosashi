@@ -1,73 +1,253 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>たこさし 極・職人魂</title>
     <style>
-        :root { 
-            --bg-color: #e67e22; --iron-color: #2c3e50;
-            --source-normal: #6e2c00; --source-gold: #f1c40f; --source-poison: #8e44ad;
-            --mayo: #f1c40f; --aonori: #27ae60;
+        :root {
+            --bg-color: #e67e22;
+            --iron-color: #2c3e50;
+            --source-normal: #6e2c00;
+            --source-gold: #f1c40f;
+            --source-poison: #8e44ad;
+            --mayo: #f1c40f;
+            --aonori: #27ae60;
         }
-        * { touch-action: manipulation; -webkit-user-select: none; box-sizing: border-box; }
-        body { 
-            text-align: center; background-color: var(--bg-color); 
+
+        * {
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+            box-sizing: border-box;
+        }
+
+        body {
+            text-align: center;
+            background-color: var(--bg-color);
             background-image: repeating-linear-gradient(45deg, #d35400 0, #d35400 1px, transparent 0, transparent 50%);
-            background-size: 10px 10px; font-family: sans-serif; margin: 0; overflow: hidden;
+            background-size: 10px 10px;
+            font-family: sans-serif;
+            margin: 0;
+            overflow: hidden;
         }
-        #ui { position: relative; z-index: 10; padding: 15px; color: #fff; text-shadow: 2px 2px 4px #000; background: rgba(0,0,0,0.3); }
-        .stats { font-size: 24px; font-weight: bold; }
-        #combo-container { font-size: 36px; color: #ffeb3b; height: 40px; margin-top: 5px; font-weight: bold; text-shadow: 0 0 10px #f39c12, 2px 2px 0 #000; }
 
-        .grid { 
-            display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; 
-            background: var(--iron-color); padding: 15px; border-radius: 20px; 
-            width: 95vw; max-width: 480px; margin: 10px auto; box-shadow: inset 0 0 20px #000, 0 8px 0 #1a252f;
+        #ui {
+            position: relative;
+            z-index: 10;
+            padding: 15px;
+            color: #fff;
+            text-shadow: 2px 2px 4px #000;
+            background: rgba(0, 0, 0, 0.3);
         }
-        .hole { aspect-ratio: 1/1; background: #1a1a1a; border-radius: 50%; cursor: pointer; position: relative; box-shadow: inset 0 5px 10px #000; overflow: hidden; }
 
-        .tako { 
-            width: 100%; height: 100%; border-radius: 50%; position: absolute; inset: 0;
-            display: flex; align-items: center; justify-content: center; pointer-events: none;
+        .stats {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        #combo-container {
+            font-size: 36px;
+            color: #ffeb3b;
+            height: 40px;
+            margin-top: 5px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #f39c12, 2px 2px 0 #000;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            background: var(--iron-color);
+            padding: 15px;
+            border-radius: 20px;
+            width: 95vw;
+            max-width: 480px;
+            margin: 10px auto;
+            box-shadow: inset 0 0 20px #000, 0 8px 0 #1a252f;
+        }
+
+        .hole {
+            aspect-ratio: 1/1;
+            background: #1a1a1a;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            box-shadow: inset 0 5px 10px #000;
+            overflow: hidden;
+        }
+
+        .tako {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: none;
             transition: transform 0.2s;
         }
-        
-        .step1 { background: radial-gradient(circle at 30% 30%, #fffde7 0%, #ffeaa7 100%); transform: scale(0.6) translateY(10px); }
-        .step2 { background: radial-gradient(circle at 30% 30%, #ffeaa7 0%, #f39c12 100%); transform: scale(0.85) translateY(5px); }
-        
-        .done { 
+
+        .step1 {
+            background: radial-gradient(circle at 30% 30%, #fffde7 0%, #ffeaa7 100%);
+            transform: scale(0.6) translateY(10px);
+        }
+
+        .step2 {
+            background: radial-gradient(circle at 30% 30%, #ffeaa7 0%, #f39c12 100%);
+            transform: scale(0.85) translateY(5px);
+        }
+
+        .done {
             background: radial-gradient(circle at 70% 70%, var(--aonori) 2px, transparent 3px),
                 linear-gradient(135deg, transparent 40%, var(--mayo) 42%, var(--mayo) 47%, transparent 49%),
                 radial-gradient(circle at 50% 40%, var(--source-normal) 0%, var(--source-normal) 60%, transparent 70%),
                 radial-gradient(circle at 30% 30%, #f39c12 0%, #d35400 100%);
         }
-        .gold { 
+
+        .gold {
             background: radial-gradient(circle at 50% 40%, var(--source-gold) 0%, #d4ac0d 60%, transparent 70%),
                 radial-gradient(circle at 30% 30%, #f1c40f 0%, #9a7d0a 100%);
-            box-shadow: 0 0 15px rgba(255,255,255,0.6), inset 0 -5px 10px rgba(0,0,0,0.3) !important;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.6), inset 0 -5px 10px rgba(0, 0, 0, 0.3) !important;
         }
-        .poison { 
+
+        .poison {
             background: radial-gradient(circle at 50% 40%, var(--source-poison) 0%, #4a235a 65%, transparent 75%),
                 radial-gradient(circle at 30% 30%, #8e44ad 0%, #2c3e50 100%);
         }
-        .burnt { background: radial-gradient(circle at 30% 30%, #444 0%, #000 100%) !important; }
 
-        @keyframes blink { 0% { filter: brightness(1); } 50% { filter: brightness(0.5) sepia(1) hue-rotate(-50deg); } 100% { filter: brightness(1); } }
-        .warning { animation: blink 0.2s infinite; }
+        .burnt {
+            background: radial-gradient(circle at 30% 30%, #444 0%, #000 100%) !important;
+        }
 
-        .tako::after { font-size: 14px; font-weight: 900; color: #fff; text-shadow: 1px 1px 2px #000; }
-        .done::after { content: "完成!"; }
-        .gold::after { content: "黄金!"; }
-        .poison::after { content: "毒!!"; color: #adff2f; }
+        @keyframes blink {
+            0% {
+                filter: brightness(1);
+            }
 
-        #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 9999; flex-direction: column; color: white; backdrop-filter: blur(5px); }
-        #start-btn, .share-btn { padding: 18px 40px; font-size: 22px; font-weight: bold; color: #fff; background: #c0392b; border: none; border-radius: 50px; cursor: pointer; margin: 15px; box-shadow: 0 5px 0 #922b21; }
-        .share-btn { background: #000; border: 2px solid #fff; display: none; }
-        #countdown-text { font-size: 100px; display: none; font-weight: 900; }
-        #result-text { font-size: 24px; margin-bottom: 20px; text-align: center; white-space: pre-wrap; }
+            50% {
+                filter: brightness(0.5) sepia(1) hue-rotate(-50deg);
+            }
+
+            100% {
+                filter: brightness(1);
+            }
+        }
+
+        .warning {
+            animation: blink 0.2s infinite;
+        }
+
+        .tako::after {
+            font-size: 14px;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        .done::after {
+            content: "完成!";
+        }
+
+        .gold::after {
+            content: "黄金!";
+        }
+
+        .poison::after {
+            content: "毒!!";
+            color: #adff2f;
+        }
+
+        #overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            flex-direction: column;
+            color: white;
+            backdrop-filter: blur(5px);
+        }
+
+        #start-btn,
+        .share-btn {
+            padding: 18px 40px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+            background: #c0392b;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 15px;
+            box-shadow: 0 5px 0 #922b21;
+        }
+
+        .share-btn {
+            background: #000;
+            border: 2px solid #fff;
+            display: none;
+        }
+
+        #countdown-text {
+            font-size: 100px;
+            display: none;
+            font-weight: 900;
+        }
+
+        #result-text {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            white-space: pre-wrap;
+        }
+
+        #leaderboard {
+            margin-top: 20px;
+            width: 80%;
+            max-width: 300px;
+            text-align: left;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            display: none;
+        }
+
+        .leaderboard-title {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #fff;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        #name-input-container {
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        #player-name {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            width: 200px;
+            font-size: 16px;
+        }
     </style>
 </head>
+
 <body>
     <div id="ui">
         <div class="stats">⏱ <span id="time">60</span>s | 得点: <span id="score">0</span></div>
@@ -75,15 +255,45 @@
     </div>
     <div class="grid" id="grid"></div>
     <div id="overlay">
-        <div id="result-text"></div>
+        <div id="result-text">たこさし 極・職人魂</div>
+        <div id="name-input-container">
+            <input type="text" id="player-name" placeholder="名前を入力してや！" maxlength="10">
+        </div>
         <button id="start-btn" onclick="preStart()">ゲーム開始！</button>
         <button id="share-btn" class="share-btn" onclick="shareX()">Xに投稿する</button>
+        <div id="leaderboard">
+            <div class="leaderboard-title">🏆 世界ランキング 🏆</div>
+            <div id="leaderboard-list">読み込み中...</div>
+        </div>
         <div id="countdown-text"></div>
     </div>
 
-    <script>
+    <script type="module">
+        // Firebase初期設定 (必要に応じて自分のプロジェクトの設定に書き換えてな！)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyAjDIRL93bVRUiQp8GX8yk1FDB-8vZVft8",
+            authDomain: "takosashi-db.firebaseapp.com",
+            projectId: "takosashi-db",
+            storageBucket: "takosashi-db.firebasestorage.app",
+            messagingSenderId: "725376798102",
+            appId: "1:725376798102:web:922c28bc49ab74d9b821b7",
+            measurementId: "G-Z91L6515GB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         let score = 0, timeLeft = 60, combo = 0, isPlaying = false;
         const grid = document.getElementById('grid');
+
+        // グローバルに関数を公開
+        window.preStart = preStart;
+        window.shareX = shareX;
+
         for (let i = 0; i < 20; i++) {
             const hole = document.createElement('div');
             hole.className = 'hole';
@@ -91,16 +301,27 @@
             grid.appendChild(hole);
         }
 
-        function preStart() {
+        async function preStart() {
+            const nameInput = document.getElementById('player-name').value;
+            if (isPlaying) return;
+
             document.getElementById('start-btn').style.display = 'none';
             document.getElementById('share-btn').style.display = 'none';
+            document.getElementById('name-input-container').style.display = 'none';
+            document.getElementById('leaderboard').style.display = 'none';
             document.getElementById('result-text').innerText = '';
+
             const countEl = document.getElementById('countdown-text');
             countEl.style.display = 'block';
             let count = 3;
             const timer = setInterval(() => {
                 countEl.innerText = count > 0 ? count : "GO!";
-                if (count-- < 0) { clearInterval(timer); countEl.style.display = 'none'; document.getElementById('overlay').style.display = 'none'; startGame(); }
+                if (count-- < 0) {
+                    clearInterval(timer);
+                    countEl.style.display = 'none';
+                    document.getElementById('overlay').style.display = 'none';
+                    startGame();
+                }
             }, 800);
         }
 
@@ -129,15 +350,15 @@
                 takoImg.className = 'tako step1';
                 target.appendChild(takoImg);
 
-                setTimeout(() => { if(takoImg.parentNode) takoImg.className = 'tako step2'; }, 1000);
-                setTimeout(() => { 
-                    if(takoImg.parentNode) {
+                setTimeout(() => { if (takoImg.parentNode) takoImg.className = 'tako step2'; }, 1000);
+                setTimeout(() => {
+                    if (takoImg.parentNode) {
                         takoImg.className = `tako done ${type}`;
                         takoImg.dataset.status = 'ready';
                         takoImg.dataset.type = type;
                     }
                 }, 2000);
-                
+
                 setTimeout(() => {
                     if (takoImg.parentNode && takoImg.dataset.status === 'ready') {
                         takoImg.classList.add('warning');
@@ -150,7 +371,7 @@
                         takoImg.className = 'tako burnt';
                         takoImg.dataset.status = 'burnt';
                         if (type !== 'poison') { combo = 0; updateUI(); }
-                        setTimeout(() => { if(takoImg.parentNode) { target.innerHTML = ''; target.classList.remove('tako-active'); } }, 1000);
+                        setTimeout(() => { if (takoImg.parentNode) { target.innerHTML = ''; target.classList.remove('tako-active'); } }, 1000);
                     }
                 }, 7000);
             }
@@ -164,9 +385,9 @@
             else {
                 combo++;
                 let base = (type === 'gold' ? 200 : 20);
-                let comboBonus = Math.floor(combo / 5) * 50; 
+                let comboBonus = Math.floor(combo / 5) * 50;
                 let gain = base + comboBonus;
-                if (tako.dataset.status === 'danger') gain = Math.floor(gain / 2); 
+                if (tako.dataset.status === 'danger') gain = Math.floor(gain / 2);
                 score += gain;
             }
             updateUI(); hole.innerHTML = ''; hole.classList.remove('tako-active');
@@ -178,29 +399,71 @@
             document.getElementById('combo').innerText = combo;
         }
 
-        function endGame() {
+        async function endGame() {
             isPlaying = false;
             let rank = "";
-            
-            // 新しいランク分け
+
             if (score > 35000) rank = "🐙たこ焼きの化身（もはやタコそのものや）";
             else if (score > 25000) rank = "宇宙一の職人（人間卒業おめでとう）";
             else if (score > 15000) rank = "令和のたこ焼き王（歴史に名を刻んだで）";
             else if (score > 8000) rank = "行列の絶えない名店（プロの技やな）";
             else if (score > 3000) rank = "近所の人気店（やるやんけ）";
             else rank = "門前払い（もっと修行してや）";
-        
-            document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}\n\n(集計中...5秒お待ちください)`;
+
+            document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}\n\n(データ送信中...)`;
             document.getElementById('overlay').style.display = 'flex';
-            
-            setTimeout(() => {
-                document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}`;
-                document.getElementById('start-btn').style.display = 'block';
-                document.getElementById('start-btn').innerText = 'もう一度焼く';
-                document.getElementById('share-btn').style.display = 'block';
-            }, 5000);
-        
+
+            // スコア送信
+            const playerName = document.getElementById('player-name').value || "名無し職人";
+            try {
+                if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+                    await addDoc(collection(db, "high_scores"), {
+                        name: playerName,
+                        score: score,
+                        timestamp: serverTimestamp()
+                    });
+                }
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+
+            // ランキング取得と表示
+            await showLeaderboard();
+
+            document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}`;
+            document.getElementById('start-btn').style.display = 'block';
+            document.getElementById('start-btn').innerText = 'もう一度焼く';
+            document.getElementById('share-btn').style.display = 'block';
+            document.getElementById('name-input-container').style.display = 'block';
+
             document.querySelectorAll('.hole').forEach(h => { h.innerHTML = ''; h.classList.remove('tako-active'); });
+        }
+
+        async function showLeaderboard() {
+            const leaderboardEl = document.getElementById('leaderboard');
+            const listEl = document.getElementById('leaderboard-list');
+            leaderboardEl.style.display = 'block';
+            listEl.innerHTML = '読み込み中...';
+
+            try {
+                if (firebaseConfig.apiKey === "YOUR_API_KEY") {
+                    listEl.innerHTML = "Firebaseの設定をしたら<br>ランキングが表示されるで！";
+                    return;
+                }
+                const q = query(collection(db, "high_scores"), orderBy("score", "desc"), limit(5));
+                const querySnapshot = await getDocs(q);
+                let html = '';
+                let rank = 1;
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    html += `<div class="leaderboard-item"><span>${rank}. ${data.name}</span><span>${data.score}点</span></div>`;
+                    rank++;
+                });
+                listEl.innerHTML = html || "まだ記録がないで！";
+            } catch (e) {
+                console.error("Error getting leaderboard: ", e);
+                listEl.innerHTML = "エラーで読み込めへんかったわ";
+            }
         }
 
         function shareX() {
@@ -208,6 +471,11 @@
             const text = encodeURIComponent(`🐙たこさし（令和最新版）でハイスコア【${score}点】獲得！\nランク：${document.getElementById('result-text').innerText.split('ランク: ')[1]}\n#たこさし令和最新版\n`);
             window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(url)}`);
         }
+
+        // 初回表示
+        document.getElementById('name-input-container').style.display = 'block';
+        showLeaderboard();
     </script>
 </body>
+
 </html>
