@@ -399,6 +399,30 @@
             document.getElementById('combo').innerText = combo;
         }
 
+        async function checkNameWithAI(userName) {
+            const API_KEY = firebaseConfig.apiKey; // ステップ1で制限をかけたキーを使ってな！
+            if (API_KEY === "YOUR_API_KEY") return true; // デフォルトキーのままならスキップ
+
+            const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+            const prompt = `オンラインゲームのランキングに掲載する名前として、以下の名前が適切か判定してください。差別用語、過度な下ネタ、誹謗中傷、公序良俗に反する表現が含まれる場合は「NG」、全く問題がない場合は「OK」と答えてください。返答は「OK」または「NG」の2文字のみにしてください。判定対象：${userName}`;
+
+            try {
+                const response = await fetch(URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+                const data = await response.json();
+                const result = data.candidates[0].content.parts[0].text.trim();
+                return result.includes("OK");
+            } catch (error) {
+                console.error("AI判定に失敗:", error);
+                return true; // 失敗時はとりあえず通す
+            }
+        }
+
         async function endGame() {
             isPlaying = false;
             let rank = "";
@@ -410,11 +434,20 @@
             else if (score > 3000) rank = "近所の人気店（やるやんけ）";
             else rank = "門前払い（もっと修行してや）";
 
-            document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}\n\n(データ送信中...)`;
+            document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}\n\n(名前チェック中...)`;
             document.getElementById('overlay').style.display = 'flex';
 
+            let playerName = document.getElementById('player-name').value || "ゲスト";
+
+            // AIによる名前チェック
+            const isSafe = await checkNameWithAI(playerName);
+            if (!isSafe) {
+                playerName = "粋じゃない名前の職人";
+            }
+
+            document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}\n\n(データ送信中...)`;
+
             // スコア送信
-            const playerName = document.getElementById('player-name').value || "ゲスト";
             try {
                 if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
                     await addDoc(collection(db, "high_scores"), {
