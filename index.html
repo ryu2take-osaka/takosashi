@@ -415,8 +415,20 @@
                     })
                 });
                 const data = await response.json();
-                const result = data.candidates[0].content.parts[0].text.trim();
-                return result.includes("OK");
+
+                // 成功レスポンスが期待通りかチェック
+                if (data && data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
+                    const result = data.candidates[0].content.parts[0].text.trim();
+                    return result.includes("OK");
+                } else {
+                    console.warn("AI判定のレスポンス形式が想定外です:", data);
+                    // 安全フィルター（Safety Filter）でブロックされた場合などもここに来る
+                    if (data.promptFeedback && data.promptFeedback.blockReason) {
+                        console.warn("セーフティフィルターによりブロックされました:", data.promptFeedback.blockReason);
+                        return false; // ブロックされるような名前はNGとする
+                    }
+                    return true; // それ以外の不明なエラーはとりあえず通す
+                }
             } catch (error) {
                 console.error("AI判定に失敗:", error);
                 return true; // 失敗時はとりあえず通す
