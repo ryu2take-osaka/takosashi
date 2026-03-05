@@ -403,7 +403,7 @@
             const API_KEY = firebaseConfig.apiKey; // ステップ1で制限をかけたキーを使ってな！
             if (API_KEY === "YOUR_API_KEY") return true; // デフォルトキーのままならスキップ
 
-            const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${API_KEY}`;
+            const URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
             const prompt = `オンラインゲームのランキングに掲載する名前として、以下の名前が適切か判定してください。差別用語、過度な下ネタ、誹謗中傷、公序良俗に反する表現が含まれる場合は「NG」、全く問題がない場合は「OK」と答えてください。返答は「OK」または「NG」の2文字のみにしてください。判定対象：${userName}`;
 
             try {
@@ -414,6 +414,13 @@
                         contents: [{ parts: [{ text: prompt }] }]
                     })
                 });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    console.error("Gemini API Error:", response.status, errorData);
+                    return true;
+                }
+
                 const data = await response.json();
 
                 // 成功レスポンスが期待通りかチェック
