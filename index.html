@@ -335,7 +335,9 @@
 
         function tick() {
             const currentCount = document.querySelectorAll('.tako-active').length;
-            const targetCount = Math.floor(Math.random() * 9) + 2;
+            // 60-45秒: 上限5, 45-30秒: 上限10, 30-15秒: 上限15, 15-0秒: 上限20
+            const maxTako = 5 + Math.floor((60 - timeLeft) / 15) * 5;
+            const targetCount = Math.floor(Math.random() * (maxTako / 2)) + Math.floor(maxTako / 2); 
             if (currentCount < targetCount) spawnTako(targetCount - currentCount);
         }
 
@@ -385,9 +387,10 @@
             else {
                 combo++;
                 let base = (type === 'gold' ? 200 : 20);
-                let comboBonus = Math.floor(combo / 5) * 50;
-                let gain = base + comboBonus;
-                if (tako.dataset.status === 'danger') gain = Math.floor(gain / 2);
+                let ratePerInterval = (type === 'gold' ? 3.0 : 1.0);
+                let comboBonusRate = Math.floor(combo / 5) * ratePerInterval; 
+                let gain = Math.floor(base * (1 + comboBonusRate));
+                if (tako.dataset.status === 'danger') gain = Math.floor(gain / 2); 
                 score += gain;
             }
             updateUI(); hole.innerHTML = ''; hole.classList.remove('tako-active');
