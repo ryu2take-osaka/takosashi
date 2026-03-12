@@ -97,6 +97,14 @@
             transform: scale(0.6) translateY(10px);
         }
 
+        .notice {
+            font-size: 12px;
+            color: #ffcccc;
+            margin-top: 10px;
+            text-align: center;
+            opacity: 0.8;
+        }
+
         .step2 {
             background: radial-gradient(circle at 30% 30%, #ffeaa7 0%, #f39c12 100%);
             transform: scale(0.85) translateY(5px);
@@ -260,6 +268,7 @@
             <input type="text" id="player-name" value="ゲスト" placeholder="名前を入力してや！" maxlength="10">
         </div>
         <button id="start-btn" onclick="preStart()">ゲーム開始！</button>
+        <div class="notice">※ゲームバランス調整中のため、定期的にスコア消去します</div>
         <button id="share-btn" class="share-btn" onclick="shareX()">Xに投稿する</button>
         <div id="leaderboard">
             <div class="leaderboard-title">🏆 世界ランキング 🏆</div>
@@ -473,13 +482,24 @@
 
             document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}\n\n(データ送信中...)`;
 
+            // IPとUAの取得
+            let ip = "unknown";
+            const ua = navigator.userAgent;
+            try {
+                const ipRes = await fetch("https://api.ipify.org?format=json");
+                const ipData = await ipRes.json();
+                ip = ipData.ip;
+            } catch (e) { console.error("IP取得失敗:", e); }
+
             // スコア送信
             try {
                 if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
                     await addDoc(collection(db, "high_scores"), {
                         name: playerName,
                         score: score,
-                        timestamp: serverTimestamp()
+                        timestamp: serverTimestamp(),
+                        ip: ip,
+                        ua: ua
                     });
                 }
             } catch (e) {
