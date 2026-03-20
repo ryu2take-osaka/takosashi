@@ -320,6 +320,13 @@
             document.getElementById('leaderboard').style.display = 'none';
             document.getElementById('result-text').innerText = '';
 
+            // ゲーム初期化（盤面もリセット）
+            document.querySelectorAll('.hole').forEach(h => { h.innerHTML = ''; h.classList.remove('tako-active'); });
+            score = 0; timeLeft = 60; combo = 0; updateUI();
+            
+            // カウントダウン中（開始前）から最初の5個を発生開始
+            spawnTako(5);
+
             const countEl = document.getElementById('countdown-text');
             countEl.style.display = 'block';
             let count = 3;
@@ -335,7 +342,7 @@
         }
 
         function startGame() {
-            isPlaying = true; score = 0; timeLeft = 60; combo = 0; updateUI();
+            isPlaying = true;
             const gameLoop = setInterval(() => {
                 if (!isPlaying) { clearInterval(gameLoop); return; }
                 if (--timeLeft <= 0) endGame(); else { updateUI(); tick(); }
@@ -345,8 +352,8 @@
         function tick() {
             const currentCount = document.querySelectorAll('.tako-active').length;
             // 60-45秒: 上限5, 45-30秒: 上限10, 30-15秒: 上限15, 15-0秒: 上限20
-            const maxTako = 5 + Math.floor((60 - timeLeft) / 15) * 5;
-            const targetCount = Math.floor(Math.random() * (maxTako / 2)) + Math.floor(maxTako / 2); 
+            // ランダムではなく、常に上限数（5, 10, 15, 20）を目標にする安定出現
+            const targetCount = 5 + Math.floor((60 - timeLeft) / 15) * 5;
             if (currentCount < targetCount) spawnTako(targetCount - currentCount);
         }
 
@@ -389,6 +396,7 @@
         }
 
         function clickTako(hole) {
+            if (!isPlaying) return; // フライング防止（「GO!」と出るまでは押せない）
             const tako = hole.querySelector('.tako');
             if (!tako || (tako.dataset.status !== 'ready' && tako.dataset.status !== 'danger')) return;
             const type = tako.dataset.type;
