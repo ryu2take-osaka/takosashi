@@ -297,6 +297,7 @@
         const db = getFirestore(app);
 
         let score = 0, timeLeft = 60, combo = 0, isPlaying = false;
+        let minScoreToRank = 3000; // ランキング登録の最低基準（デフォルト3000、5位がいればそのスコア）
         const grid = document.getElementById('grid');
 
         // グローバルに関数を公開
@@ -374,10 +375,22 @@
                         takoImg.className = `tako done ${type}`;
                         takoImg.dataset.status = 'ready';
                         takoImg.dataset.type = type;
+                        
+                        // 毒たこ焼きは出現して1秒後(計3秒)にすぐ炭になって消える
+                        if (type === 'poison') {
+                            setTimeout(() => {
+                                if (takoImg.parentNode && takoImg.dataset.status === 'ready') {
+                                    takoImg.className = 'tako burnt';
+                                    takoImg.dataset.status = 'burnt';
+                                    setTimeout(() => { if (takoImg.parentNode) { target.innerHTML = ''; target.classList.remove('tako-active'); } }, 1000);
+                                }
+                            }, 1000);
+                        }
                     }
                 }, 2000);
 
                 setTimeout(() => {
+                    if (type === 'poison') return; // 毒は別のタイマーで処理するためスキップ
                     if (takoImg.parentNode && takoImg.dataset.status === 'ready') {
                         takoImg.classList.add('warning');
                         takoImg.dataset.status = 'danger';
@@ -385,10 +398,11 @@
                 }, 6000);
 
                 setTimeout(() => {
+                    if (type === 'poison') return; // 毒は別のタイマーで処理するためスキップ
                     if (takoImg.parentNode && (takoImg.dataset.status === 'ready' || takoImg.dataset.status === 'danger')) {
                         takoImg.className = 'tako burnt';
                         takoImg.dataset.status = 'burnt';
-                        if (type !== 'poison') { combo = 0; updateUI(); }
+                        combo = 0; updateUI();
                         setTimeout(() => { if (takoImg.parentNode) { target.innerHTML = ''; target.classList.remove('tako-active'); } }, 1000);
                     }
                 }, 7000);
@@ -477,41 +491,46 @@
             else if (score > 3000) rank = "近所の人気店（やるやんけ）";
             else rank = "門前払い（もっと修行してや）";
 
-            document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}\n\n(名前チェック中...)`;
             document.getElementById('overlay').style.display = 'flex';
-
             let playerName = document.getElementById('player-name').value || "ゲスト";
 
-            // AIによる名前チェック
-            const isSafe = await checkNameWithAI(playerName);
-            if (!isSafe) {
-                playerName = "粋じゃない名前の職人";
-            }
-
-            document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}\n\n(データ送信中...)`;
-
-            // IPとUAの取得
-            let ip = "unknown";
-            const ua = navigator.userAgent;
-            try {
-                const ipRes = await fetch("https://api.ipify.org?format=json");
-                const ipData = await ipRes.json();
-                ip = ipData.ip;
-            } catch (e) { console.error("IP取得失敗:", e); }
-
-            // スコア送信
-            try {
-                if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
-                    await addDoc(collection(db, "high_scores"), {
-                        name: playerName,
-                        score: score,
-                        timestamp: serverTimestamp(),
-                        ip: ip,
-                        ua: ua
-                    });
+            const borderScore = Math.max(3000, minScoreToRank);
+            if (score <= borderScore) {
+                document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}\n\n(現在のランキングボーダーは ${borderScore + 1} 点以上です)`;
+            } else {
+                document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}\n\n(名前チェック中...)`;
+                
+                // AIによる名前チェック
+                const isSafe = await checkNameWithAI(playerName);
+                if (!isSafe) {
+                    playerName = "粋じゃない名前の職人";
                 }
-            } catch (e) {
-                console.error("Error adding document: ", e);
+
+                document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}\n\n(データ送信中...)`;
+
+                // IPとUAの取得
+                let ip = "unknown";
+                const ua = navigator.userAgent;
+                try {
+                    const ipRes = await fetch("https://api.ipify.org?format=json");
+                    const ipData = await ipRes.json();
+                    ip = ipData.ip;
+                } catch (e) { console.error("IP取得失敗:", e); }
+
+                // スコア送信
+                try {
+                    if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+                        await addDoc(collection(db, "high_scores"), {
+                            name: playerName,
+                            score: score,
+                            timestamp: serverTimestamp(),
+                            ip: ip,
+                            ua: ua
+                        });
+                    }
+                } catch (e) {
+                    console.error("Error adding document: ", e);
+                }
             }
 
             // ランキング取得と表示
@@ -544,11 +563,19 @@
                 const querySnapshot = await getDocs(q);
                 let html = '';
                 let rank = 1;
+                let lastScore = 0;
                 querySnapshot.forEach((doc) => {
                     const data = doc.data();
                     html += `<div class="leaderboard-item"><span>${rank}. ${data.name}</span><span>${data.score}点</span></div>`;
                     rank++;
+                    lastScore = data.score;
                 });
+                
+                // トップ5が埋まっているなら、その一番下（5位）のスコアを足切り基準に更新
+                if (rank > 5) {
+                    minScoreToRank = lastScore;
+                }
+                
                 listEl.innerHTML = html || "まだ記録がないで！";
             } catch (e) {
                 console.error("Error getting leaderboard: ", e);
