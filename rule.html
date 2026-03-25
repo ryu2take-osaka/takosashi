@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>たこさし ～令和最新版～ ｜ ルール説明</title>
+    <style>
+        :root { --main-color: #ff4757; --iron-color: #2f3542; --bg-color: #1e272e; }
+        * { box-sizing: border-box; user-select: none; }
+        body { margin: 0; padding: 20px; font-family: 'Helvetica Neue', Arial, 'Yu Gothic', sans-serif; background: var(--bg-color); color: #fff; line-height: 1.6; }
+        h1 { text-align: center; color: var(--main-color); font-size: 24px; text-shadow: 2px 2px 0 #fff; margin-bottom: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: var(--iron-color); padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .section { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        h2 { color: #ffa502; font-size: 20px; border-bottom: 2px solid #ffa502; padding-bottom: 5px; margin-top: 0; }
+        ul { padding-left: 20px; margin-bottom: 0; }
+        li { margin-bottom: 10px; }
+        .highlight { color: #eccc68; font-weight: bold; font-size: 1.1em; }
+        .danger { color: #ff4757; font-weight: bold; }
+        .gold { color: #f1c40f; font-weight: bold; text-shadow: 0 0 5px #f1c40f; }
+        
+        /* たこ焼きの見た目再現 */
+        .score-box { display: flex; align-items: center; background: #000; padding: 15px; border-radius: 8px; margin-bottom: 10px; }
+        .tako-icon { display: inline-block; width: 40px; height: 40px; border-radius: 50%; margin-right: 15px; position: flex; align-items: center; justify-content: center; box-shadow: inset 0 5px 10px rgba(0,0,0,0.5); }
+        .tako-normal { background: radial-gradient(circle at 30% 30%, #ff6b81 0%, #ff4757 100%); }
+        .tako-gold { background: radial-gradient(circle at 30% 30%, #f1c40f 0%, #f39c12 100%); box-shadow: 0 0 15px #f1c40f, inset 0 5px 10px rgba(0,0,0,0.5); }
+        .tako-poison { background: radial-gradient(circle at 30% 30%, #a29bfe 0%, #6c5ce7 100%); }
+        .score-details { flex: 1; }
+        .score-title { font-size: 18px; font-weight: bold; margin-bottom: 2px; }
+        .score-points { font-size: 20px; color: #7bed9f; font-weight: bold; }
+
+        .btn-back { display: block; width: 100%; padding: 15px; background: #2ed573; color: #fff; text-align: center; text-decoration: none; font-size: 20px; font-weight: bold; border-radius: 50px; margin-top: 20px; box-shadow: 0 5px 0 #218c53; transition: transform 0.1s, box-shadow 0.1s; }
+        .btn-back:active { transform: translateY(5px); box-shadow: 0 0 0 #218c53; }
+    </style>
+</head>
+<body>
+    <h1>🐙たこさし ～令和最新版～<br>遊び方とルール</h1>
+    <div class="container">
+        
+        <div class="section">
+            <h2>⏱ 基本ルール</h2>
+            <ul>
+                <li>制限時間は <span class="highlight">1分（60秒）</span> や！</li>
+                <li>穴から出てくるたこ焼きが焼けたら、<span class="highlight">クリック・タップして取る</span>だけやで！</li>
+                <li>この世界は生産力がすべて。限界までスコアを稼いで最強の「職人」を目指せ！</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>🍡 基礎点の紹介</h2>
+            
+            <div class="score-box">
+                <div class="tako-icon tako-normal"></div>
+                <div class="score-details">
+                    <div class="score-title">ノーマルたこ焼き</div>
+                    <div class="score-points">基礎点：20点</div>
+                </div>
+            </div>
+            
+            <div class="score-box">
+                <div class="tako-icon tako-gold"></div>
+                <div class="score-details">
+                    <div class="score-title gold">黄金のたこ焼き</div>
+                    <div class="score-points">基礎点：200点</div>
+                </div>
+                <div style="font-size:12px; color:#ccc;">王者のたこ焼き！<br>大幅にスコアが伸びるぞ！</div>
+            </div>
+
+            <div class="score-box">
+                <div class="tako-icon tako-poison"></div>
+                <div class="score-details">
+                    <div class="score-title danger">紫のたこ焼き（毒）</div>
+                    <div class="score-points danger">-100点</div>
+                </div>
+                <div style="font-size:12px; color:#ccc;">食べたら食中毒や！<br>コンボが即座に切れるぞ！</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🔥 コンボシステム（重要）</h2>
+            <p>連続してノーマルや黄金を取り続けると <span class="highlight">コンボ</span> が貯まって、スコアが爆発的に加速するで！</p>
+            <ul>
+                <li><span class="highlight">5コンボ進むごと</span>に、ボーナス倍率がドンと上がるんや。</li>
+                <li><strong style="color: #ff6b81;">ノーマルの場合：</strong> 5コンボごとに基礎点に対して <span class="highlight">+100%（元の20点分）ずつ</span> 獲得点数が増えていく！</li>
+                <li><strong class="gold">黄金の場合：</strong> 5コンボごとに基礎点に対して <strong class="highlight">+300%（元の600点分）ずつ</strong> 獲得点数が増える！！エグい！！</li>
+                <li>もし<span class="danger">「毒」</span>を触ったり、たこ焼きを放置して<span class="danger">「焦がす」</span>と、コンボは無情にもゼロに戻るから注意やで。</li>
+            </ul>
+            <p style="text-align:center; font-size:14px; margin-top:15px; background:#000; padding:10px; border-radius:5px;">
+                💡 100コンボ繋ぐと…<br>ノーマル1個で <strong style="color:#7bed9f;">420点</strong>、黄金1個でなんと <strong class="gold">12,200点</strong> になるで！
+            </p>
+        </div>
+
+        <a href="index.html" class="btn-back">ゲームに戻る 🐙</a>
+    </div>
+</body>
+</html>

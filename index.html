@@ -268,6 +268,7 @@
             <input type="text" id="player-name" value="ゲスト" placeholder="名前を入力してや！" maxlength="10">
         </div>
         <button id="start-btn" onclick="preStart()">ゲーム開始！</button>
+        <a href="rule.html" id="rule-btn" style="color: #f1c40f; font-weight: bold; margin-top: 15px; text-decoration: underline; display: block; text-align: center;">📖 遊び方とルールを見る</a>
         <div class="notice">※ゲームバランス調整中のため、定期的にスコア消去します</div>
         <button id="share-btn" class="share-btn" onclick="shareX()">Xに投稿する</button>
         <div id="leaderboard">
@@ -316,6 +317,7 @@
             if (isPlaying) return;
 
             document.getElementById('start-btn').style.display = 'none';
+            document.getElementById('rule-btn').style.display = 'none';
             document.getElementById('share-btn').style.display = 'none';
             document.getElementById('name-input-container').style.display = 'none';
             document.getElementById('leaderboard').style.display = 'none';
@@ -542,6 +544,7 @@
             document.getElementById('result-text').innerText = `【リザルト】\nスコア: ${score}点\nランク: ${rank}`;
             document.getElementById('start-btn').style.display = 'block';
             document.getElementById('start-btn').innerText = 'もう一度焼く';
+            document.getElementById('rule-btn').style.display = 'block';
             document.getElementById('share-btn').style.display = 'block';
             document.getElementById('name-input-container').style.display = 'block';
 
