@@ -269,6 +269,7 @@
         </div>
         <button id="start-btn" onclick="preStart()">ゲーム開始！</button>
         <a href="rule.html" id="rule-btn" style="color: #f1c40f; font-weight: bold; margin-top: 15px; text-decoration: underline; display: block; text-align: center;">📖 遊び方とルールを見る</a>
+        <a href="index_ex.html" id="ex-btn" style="color: #ff7675; font-weight: bold; margin-top: 10px; text-decoration: underline; display: block; text-align: center;">⚡ たこさしEX（マス目4倍・80穴）で遊ぶ！</a>
         <div class="notice">※ゲームバランス調整中のため、定期的にスコア消去します</div>
         <button id="share-btn" class="share-btn" onclick="shareX()">Xに投稿する</button>
         <div id="leaderboard">
@@ -318,6 +319,7 @@
 
             document.getElementById('start-btn').style.display = 'none';
             document.getElementById('rule-btn').style.display = 'none';
+            if (document.getElementById('ex-btn')) document.getElementById('ex-btn').style.display = 'none';
             document.getElementById('share-btn').style.display = 'none';
             document.getElementById('name-input-container').style.display = 'none';
             document.getElementById('leaderboard').style.display = 'none';
@@ -545,6 +547,7 @@
             document.getElementById('start-btn').style.display = 'block';
             document.getElementById('start-btn').innerText = 'もう一度焼く';
             document.getElementById('rule-btn').style.display = 'block';
+            if (document.getElementById('ex-btn')) document.getElementById('ex-btn').style.display = 'block';
             document.getElementById('share-btn').style.display = 'block';
             document.getElementById('name-input-container').style.display = 'block';
 
